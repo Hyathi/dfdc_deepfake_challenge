@@ -26,7 +26,7 @@ RUN conda install cython -y && conda clean --all
 RUN pip install -U pip --no-build-isolation
 RUN git clone https://github.com/NVIDIA/apex
 RUN sed -i 's/check_cuda_torch_binary_vs_bare_metal(torch.utils.cpp_extension.CUDA_HOME)/pass/g' apex/setup.py
-RUN pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext"  ./apex
+RUN pip install -v --disable-pip-version-check --no-cache-dir --no-build-isolation --config-settings "--build-option=--cpp_ext" --config-settings "--build-option=--cuda_ext" ./
 RUN apt-get update -y
 RUN apt-get install build-essential cmake -y
 RUN apt-get install libopenblas-dev liblapack-dev -y
