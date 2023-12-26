@@ -62,7 +62,7 @@ def main():
     args = parse_args()
     pairs = get_original_with_fakes(args.root_dir)
     os.makedirs(os.path.join(args.root_dir, "diffs"), exist_ok=True)
-    with Pool(processes=os.cpu_count() - 2) as p:
+    with Pool(processes=2) as p:
         with tqdm(total=len(pairs)) as pbar:
             func = partial(save_diffs, root_dir=args.root_dir)
             for v in p.imap_unordered(func, pairs):
