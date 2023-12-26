@@ -14,6 +14,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN rm /etc/apt/sources.list.d/cuda.list
 RUN rm /etc/apt/sources.list.d/nvidia-ml.list
+
 RUN apt-get update && apt-get install -y libglib2.0-0 libsm6 libxrender-dev libxext6 nano mc glances vim git \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
@@ -22,21 +23,10 @@ RUN apt-get update && apt-get install -y libglib2.0-0 libsm6 libxrender-dev libx
 RUN conda install cython -y && conda clean --all
 
 # Installing APEX
-RUN pip install -U pip
+RUN pip install -U pip --no-build-isolation
 RUN git clone https://github.com/NVIDIA/apex
 RUN sed -i 's/check_cuda_torch_binary_vs_bare_metal(torch.utils.cpp_extension.CUDA_HOME)/pass/g' apex/setup.py
-RUN pip install packaging
-WORKDIR /tmp/unique_for_apex
-# uninstall Apex if present, twice to make absolutely sure :)
-RUN pip uninstall -y apex || :
-RUN pip uninstall -y apex || :
-# SHA is something the user can touch to force recreation of this Docker layer,
-# and therefore force cloning of the latest version of Apex
-RUN SHA=ToUcHMe git clone https://github.com/NVIDIA/apex.git
-WORKDIR /tmp/unique_for_apex/apex
-RUN pip install -U wheel
-RUN pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" .
-#RUN pip install --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./apex
+RUN pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext"  ./apex
 RUN apt-get update -y
 RUN apt-get install build-essential cmake -y
 RUN apt-get install libopenblas-dev liblapack-dev -y
@@ -64,4 +54,3 @@ RUN chmod 777 predict_submission.sh
 ENV PYTHONPATH=.
 
 CMD ["/bin/bash"]
-
