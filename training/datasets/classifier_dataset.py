@@ -374,5 +374,5 @@ class DeepFakeClassifierDataset(Dataset):
         fakes = rows[rows["label"] == 1]
         num_real = real["video"].count()
         if self.mode == "train":
-            fakes = fakes.sample(n=num_real, random_state=seed)
+            fakes = fakes.sample(n=num_real, replace=True, random_state=seed)
         return pd.concat([real, fakes])
