@@ -4,7 +4,7 @@ import os
 os.environ["MKL_NUM_THREADS"] = "1"
 os.environ["NUMEXPR_NUM_THREADS"] = "1"
 os.environ["OMP_NUM_THREADS"] = "1"
-from skimage.measure import compare_ssim
+from skimage import measure
 
 from functools import partial
 from multiprocessing.pool import Pool
@@ -42,7 +42,7 @@ def save_diffs(pair, root_dir):
                 img1 = cv2.imread(ori_path, cv2.IMREAD_COLOR)
                 img2 = cv2.imread(fake_path, cv2.IMREAD_COLOR)
                 try:
-                    d, a = compare_ssim(img1, img2, multichannel=True, full=True)
+                    d, a = measure.compare_ssim(img1, img2, multichannel=True, full=True)
                     a = 1 - a
                     diff = (a * 255).astype(np.uint8)
                     diff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
