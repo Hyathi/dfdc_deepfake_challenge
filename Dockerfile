@@ -24,9 +24,9 @@ RUN conda install cython -y && conda clean --all
 
 # Installing APEX
 RUN pip install pip --no-build-isolation
-RUN pip uninstall setuptools
 RUN pip install setuptools==60.2.0
 RUN pip install packaging
+RUN conda install packaging
 RUN rm -R apex
 RUN git clone https://github.com/NVIDIA/apex
 RUN sed -i 's/check_cuda_torch_binary_vs_bare_metal(torch.utils.cpp_extension.CUDA_HOME)/pass/g' apex/setup.py
