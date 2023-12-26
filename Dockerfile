@@ -26,7 +26,16 @@ RUN pip install -U pip
 RUN git clone https://github.com/NVIDIA/apex
 RUN sed -i 's/check_cuda_torch_binary_vs_bare_metal(torch.utils.cpp_extension.CUDA_HOME)/pass/g' apex/setup.py
 RUN pip install packaging
-RUN pip install --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./apex
+
+# Build apex
+RUN echo "Setup NVIDIA Apex" && \
+    tmp_apex_path="/tmp/apex" && \
+    rm -rf $tmp_apex_path && \
+    git clone https://github.com/NVIDIA/apex $tmp_apex_path && \
+    cd $tmp_apex_path && \
+    pip wheel --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" .
+
+#RUN pip install --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./apex
 RUN apt-get update -y
 RUN apt-get install build-essential cmake -y
 RUN apt-get install libopenblas-dev liblapack-dev -y
