@@ -3,7 +3,7 @@ import random
 import cv2
 import numpy as np
 from albumentations import DualTransform, ImageOnlyTransform
-from albumentations.augmentations.functional import crop
+import albumentations as A
 
 
 def isotropically_resize_image(img, size, interpolation_down=cv2.INTER_AREA, interpolation_up=cv2.INTER_CUBIC):
@@ -64,7 +64,7 @@ class RandomSizedCropNonEmptyMaskIfExists(DualTransform):
         self.w2h_ratio = w2h_ratio
 
     def apply(self, img, x_min=0, x_max=0, y_min=0, y_max=0, **params):
-        cropped = crop(img, x_min, y_min, x_max, y_max)
+        cropped = A.augmentations.functional.crop(img, x_min, y_min, x_max, y_max)
         return cropped
 
     @property
