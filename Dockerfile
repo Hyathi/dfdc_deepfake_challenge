@@ -34,6 +34,7 @@ RUN pip uninstall -y apex || :
 # and therefore force cloning of the latest version of Apex
 RUN SHA=ToUcHMe git clone https://github.com/NVIDIA/apex.git
 WORKDIR /tmp/unique_for_apex/apex
+RUN pip install -U wheel
 RUN pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" .
 #RUN pip install --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./apex
 RUN apt-get update -y
